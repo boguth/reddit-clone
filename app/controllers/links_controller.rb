@@ -9,9 +9,12 @@ class LinksController < ApplicationController
   end
 
   def create
-    if @new_link = Link.create(link_params)
-      redirect_to action: index
+    @link = Link.new(link_params)
+    if @link.save
+      flash[:notice] = "You have created a new link."
+      redirect_to action: :index
     else
+      flash[:alert] = "You done messed up bad."
       render :new
     end
   end
