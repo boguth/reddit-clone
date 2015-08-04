@@ -1,15 +1,15 @@
 class LinksController < ApplicationController
-
+before_filter :authenticate_user!, except: [:index, :show]
   def index
     @links = Link.all
   end
 
   def new
-    @link = Link.new
+    @link = current_user.links.build
   end
 
   def create
-    @link = Link.new(link_params)
+    @link = current_user.links.build(link_params)
     if @link.save
       flash[:notice] = "You have created a new link."
       redirect_to action: :index
@@ -21,6 +21,12 @@ class LinksController < ApplicationController
 
   def show
 
+  end
+
+  def destroy
+    @link = Link.find(params[:id])
+    @link.delete
+    redirect_to action: :index
   end
 
 private
